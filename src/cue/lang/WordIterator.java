@@ -24,31 +24,26 @@ import java.util.regex.Pattern;
  * @author Jonathan Feinberg <jdf@us.ibm.com>
  * 
  */
-public class WordIterator extends IterableText
-{
+public class WordIterator extends IterableText {
 	private static final String LETTER = "[@+\\p{javaLetter}\\p{javaDigit}]";
 	private static final String JOINER = "[-.:/'’\\p{M}\\u2032\\u00A0\\u200C\\u200D~]";
-	private static final Pattern WORD = Pattern.compile(LETTER + "+(" + JOINER + "+"
-			+ LETTER + "+)*");
+	private static final Pattern WORD = Pattern.compile(LETTER + "+(" + JOINER
+			+ "+" + LETTER + "+)*");
 
 	private final Matcher m;
 	private boolean hasNext;
 
-	public WordIterator(final String text)
-	{
+	public WordIterator(final String text) {
 		this.m = WORD.matcher(text == null ? "" : text);
 		hasNext = m.find();
 	}
 
-	public void remove()
-	{
+	public void remove() {
 		throw new UnsupportedOperationException();
 	}
 
-	public String next()
-	{
-		if (!hasNext)
-		{
+	public String next() {
+		if (!hasNext) {
 			throw new NoSuchElementException();
 		}
 		final String s = m.group();
@@ -56,8 +51,7 @@ public class WordIterator extends IterableText
 		return s;
 	}
 
-	public boolean hasNext()
-	{
+	public boolean hasNext() {
 		return hasNext;
 	}
 }
