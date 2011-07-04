@@ -25,33 +25,33 @@ import java.util.regex.Pattern;
  * 
  */
 public class WordIterator extends IterableText {
-	private static final String LETTER = "[@+\\p{javaLetter}\\p{javaDigit}]";
-	private static final String JOINER = "[-.:/'’\\p{M}\\u2032\\u00A0\\u200C\\u200D~]";
-	private static final Pattern WORD = Pattern.compile(LETTER + "+(" + JOINER
-			+ "+" + LETTER + "+)*");
+    private static final String LETTER = "[@+\\p{javaLetterOrDigit}]";
+    private static final String JOINER = "[-.:/'’\\p{M}\\u2032\\u00A0\\u200C\\u200D~]";
+    private static final Pattern WORD = Pattern.compile(LETTER + "+(" + JOINER + "+" + LETTER
+            + "+)*");
 
-	private final Matcher m;
-	private boolean hasNext;
+    private final Matcher m;
+    private boolean hasNext;
 
-	public WordIterator(final String text) {
-		this.m = WORD.matcher(text == null ? "" : text);
-		hasNext = m.find();
-	}
+    public WordIterator(final String text) {
+        this.m = WORD.matcher(text == null ? "" : text);
+        hasNext = m.find();
+    }
 
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 
-	public String next() {
-		if (!hasNext) {
-			throw new NoSuchElementException();
-		}
-		final String s = m.group();
-		hasNext = m.find();
-		return s;
-	}
+    public String next() {
+        if (!hasNext) {
+            throw new NoSuchElementException();
+        }
+        final String s = m.group();
+        hasNext = m.find();
+        return s;
+    }
 
-	public boolean hasNext() {
-		return hasNext;
-	}
+    public boolean hasNext() {
+        return hasNext;
+    }
 }

@@ -35,89 +35,87 @@ import cue.lang.WordIterator;
  * 
  */
 public enum StopWords {
-	Arabic(), Catalan(true), Croatian(), Czech(), Dutch(), //
-	Danish(), English(), Esperanto(), Farsi(), Finnish(), //
-	French(true), German(), Greek(), Hindi(), Hungarian(), //
-	Italian(), Latin(), Norwegian(), Polish(), Portuguese(), //
-	Romanian(), Russian(), Slovenian(), Slovak(), Spanish(), //
-	Swedish(), Hebrew(), Turkish(), Custom();
+    Arabic(), Armenian(), Catalan(true), Croatian(), Czech(), Dutch(), //
+    Danish(), English(), Esperanto(), Farsi(), Finnish(), //
+    French(true), German(), Greek(), Hindi(), Hungarian(), //
+    Italian(), Latin(), Norwegian(), Polish(), Portuguese(), //
+    Romanian(), Russian(), Slovenian(), Slovak(), Spanish(), //
+    Swedish(), Hebrew(), Turkish(), Custom();
 
-	public static StopWords guess(final String text) {
-		return guess(new Counter<String>(new WordIterator(text)));
-	}
+    public static StopWords guess(final String text) {
+        return guess(new Counter<String>(new WordIterator(text)));
+    }
 
-	public static StopWords guess(final Counter<String> wordCounter) {
-		return guess(wordCounter.getMostFrequent(50));
-	}
+    public static StopWords guess(final Counter<String> wordCounter) {
+        return guess(wordCounter.getMostFrequent(50));
+    }
 
-	public static StopWords guess(final Collection<String> words) {
-		StopWords currentWinner = null;
-		int currentMax = 0;
-		for (final StopWords stopWords : StopWords.values()) {
-			int count = 0;
-			for (final String word : words) {
-				if (stopWords.isStopWord(word)) {
-					count++;
-				}
-			}
-			if (count > currentMax) {
-				currentWinner = stopWords;
-				currentMax = count;
-			}
-		}
-		return currentWinner;
-	}
+    public static StopWords guess(final Collection<String> words) {
+        StopWords currentWinner = null;
+        int currentMax = 0;
+        for (final StopWords stopWords : StopWords.values()) {
+            int count = 0;
+            for (final String word : words) {
+                if (stopWords.isStopWord(word)) {
+                    count++;
+                }
+            }
+            if (count > currentMax) {
+                currentWinner = stopWords;
+                currentMax = count;
+            }
+        }
+        return currentWinner;
+    }
 
-	public final boolean stripApostrophes;
-	private final Set<String> stopwords = new HashSet<String>();
+    public final boolean stripApostrophes;
+    private final Set<String> stopwords = new HashSet<String>();
 
-	private StopWords() {
-		this(false);
-	}
+    private StopWords() {
+        this(false);
+    }
 
-	private StopWords(final boolean stripApostrophes) {
-		this.stripApostrophes = stripApostrophes;
-		loadLanguage();
-	}
+    private StopWords(final boolean stripApostrophes) {
+        this.stripApostrophes = stripApostrophes;
+        loadLanguage();
+    }
 
-	public boolean isStopWord(final String s) {
-		if (s.length() == 1) {
-			return true;
-		}
-		// check rightquotes as apostrophes
-		return stopwords.contains(s.replace('\u2019', '\'').toLowerCase(
-				Locale.ENGLISH));
-	}
+    public boolean isStopWord(final String s) {
+        if (s.length() == 1) {
+            return true;
+        }
+        // check rightquotes as apostrophes
+        return stopwords.contains(s.replace('\u2019', '\'').toLowerCase(Locale.ENGLISH));
+    }
 
-	private void loadLanguage() {
-		final String wordlistResource = name().toLowerCase(Locale.ENGLISH);
-		if (!wordlistResource.equals("custom")) {
-			readStopWords(getClass().getResourceAsStream(wordlistResource),
-					Charset.forName("UTF-8"));
-		}
-	}
+    private void loadLanguage() {
+        final String wordlistResource = name().toLowerCase(Locale.ENGLISH);
+        if (!wordlistResource.equals("custom")) {
+            readStopWords(getClass().getResourceAsStream(wordlistResource),
+                    Charset.forName("UTF-8"));
+        }
+    }
 
-	public void readStopWords(final InputStream inputStream,
-			final Charset encoding) {
-		try {
-			final BufferedReader in = new BufferedReader(new InputStreamReader(
-					inputStream, encoding));
-			try {
-				String line;
-				while ((line = in.readLine()) != null) {
-					line = line.replaceAll("\\|.*", "").trim();
-					if (line.length() == 0) {
-						continue;
-					}
-					for (final String w : line.split("\\s+")) {
-						stopwords.add(w.toLowerCase(Locale.ENGLISH));
-					}
-				}
-			} finally {
-				in.close();
-			}
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public void readStopWords(final InputStream inputStream, final Charset encoding) {
+        try {
+            final BufferedReader in = new BufferedReader(new InputStreamReader(inputStream,
+                    encoding));
+            try {
+                String line;
+                while ((line = in.readLine()) != null) {
+                    line = line.replaceAll("\\|.*", "").trim();
+                    if (line.length() == 0) {
+                        continue;
+                    }
+                    for (final String w : line.split("\\s+")) {
+                        stopwords.add(w.toLowerCase(Locale.ENGLISH));
+                    }
+                }
+            } finally {
+                in.close();
+            }
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
