@@ -25,11 +25,7 @@ import java.util.regex.Pattern;
  * 
  */
 public class WordIterator extends IterableText {
-    private static final String LETTER = "[@+\\p{javaLetterOrDigit}]";
-    private static final String JOINER = "[-.:/'’\\p{M}\\u2032\\u00A0\\u200C\\u200D~]";
-    private static final Pattern WORD = Pattern.compile(LETTER + "+(" + JOINER + "+" + LETTER
             + "+)*");
-
     private final Matcher m;
     private boolean hasNext;
 
